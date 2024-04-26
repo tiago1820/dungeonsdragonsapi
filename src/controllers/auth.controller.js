@@ -1,8 +1,13 @@
 import jwt from "jsonwebtoken";
 import { JWT_SECRET_KEY } from "../constants/index.js";
 import { User } from "../db.js";
+import { Encryption } from "../utils/encryption.util.js";
 
 export class AuthController {
+    constructor() {
+        this.encrypt = new Encryption();
+    }
+
     generateToken = (user) => {
         return jwt.sign({ user: user }, JWT_SECRET_KEY);
     }
@@ -16,11 +21,14 @@ export class AuthController {
                 data = { error: `There is already a user with the email ${email}` };
                 return res.status(400).json(data);
             }
-            const user = await User.create({ userName, email, password });
+            const hash = await this.encrypt.encryptPassword(password);
+            console.log("HASH: ", hash);
+            const user = await User.create({ userName, email, password: hash });
             const token = this.generateToken(user);
             data = { token, isAuth: true, message: "Successfully registered." };
             res.status(201).json(data);
         } catch (error) {
+            console.log("ERRORES: ", error);
             data = { error: "Internal server error." };
             return res.status(400).json(data);
         }
@@ -30,7 +38,7 @@ export class AuthController {
         let data = {};
         try {
             const { email, password } = req.body;
-            const user = await User.findOne({ where: { email, password } });
+            const user = await User.findOne({ where: { email, password: String(password) } });
             if (!user) {
                 data = { error: "User not found." }
                 return res.status(400).json(data);
@@ -39,6 +47,7 @@ export class AuthController {
             data = { token, isAuth: true, message: "Login successful." };
             res.status(200).json(data);
         } catch (error) {
+            console.log("AQUI: ", error);
             data["error"] = "Internal Server Error";
             return res.status(500).json(data);
         }
