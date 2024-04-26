@@ -25,4 +25,22 @@ export class AuthController {
             return res.status(400).json(data);
         }
     }
+
+    loginUser = async (req, res) => {
+        let data = {};
+        try {
+            const { email, password } = req.body;
+            const user = await User.findOne({ where: { email, password } });
+            if (!user) {
+                data = { error: "User not found." }
+                return res.status(400).json(data);
+            }
+            const token = this.generateToken(user);
+            data = { token, isAuth: true, message: "Login successful." };
+            res.status(200).json(data);
+        } catch (error) {
+            data["error"] = "Internal Server Error";
+            return res.status(500).json(data);
+        }
+    }
 }
