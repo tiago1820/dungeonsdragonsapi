@@ -14,6 +14,7 @@ export class Authenticate {
 
     authenticate = async (req, res, next) => {
         let data = {};
+        let user;
         try {
             if (!req.headers?.authorization) {
                 data = { error: "Please provide a token." };
@@ -25,7 +26,6 @@ export class Authenticate {
                 return res.status(400).send(data);
             }
             const token = bearerToken.split(" ")[1];
-            let user;
             user = await this.verifyToken(token);
         } catch (error) {
             data = { error: "Internal server error." };
