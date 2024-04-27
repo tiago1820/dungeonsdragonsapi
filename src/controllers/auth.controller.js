@@ -12,6 +12,13 @@ export class AuthController {
         return jwt.sign({ user: user }, JWT_SECRET_KEY);
     }
 
+    authenticateUser = async (email, password) => {
+        const user = await User.findOne({ where: { email } });
+        if (!user) return null;
+        const isValidPassword = await this.encrypt.validatePassword(password, user.password);
+        return isValidPassword ? user : null;
+    }
+
     registerUser = async (req, res) => {
         let data = {};
         try {
@@ -38,9 +45,9 @@ export class AuthController {
         let data = {};
         try {
             const { email, password } = req.body;
-            const user = await User.findOne({ where: { email, password: String(password) } });
+            const user = await this.authenticateUser(email, password);
             if (!user) {
-                data = { error: "User not found." }
+                data = { error: "Wrong username and/or password!" };
                 return res.status(400).json(data);
             }
             const token = this.generateToken(user);
