@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  postgredb:
+    image: postgres
+    env_file:
+      - ./.env
+    environment:
+      - POSTGRES_USER=$DB_USER
+      - POSTGRES_PASSWORD=$DB_PASSWORD
+      - POSTGRES_DB=$DB_NAME
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - $DB_PORT:$DB_PORT
+  
+  app:
+    build: .
+    depends_on:
+      - postgredb
+    links:
+      - postgredb
+    ports:
+      - $SERVER_PORT:$SERVER_PORT
+    volumes:
+      - /home/tiago/Proyectos/dungeonsdragonsapi:/myapi
+
+
+volumes:
+  pgdata:
+      

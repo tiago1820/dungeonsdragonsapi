@@ -29,7 +29,6 @@ export class AuthController {
                 return res.status(400).json(data);
             }
             const hash = await this.encrypt.encryptPassword(password);
-            console.log("HASH: ", hash);
             const user = await User.create({ userName, email, password: hash });
             const token = this.generateToken(user);
             data = { token, isAuth: true, message: "Successfully registered." };
@@ -51,10 +50,12 @@ export class AuthController {
                 return res.status(400).json(data);
             }
             const token = this.generateToken(user);
+            console.log("OOOOOOOOOOOOOOOOOOOOOOHI: ");
+
             data = { token, isAuth: true, message: "Login successful." };
             res.status(200).json(data);
         } catch (error) {
-            console.log("AQUI: ", error);
+            console.log("ERROR: ", error);
             data["error"] = "Internal Server Error";
             return res.status(500).json(data);
         }
