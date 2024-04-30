@@ -25,7 +25,5 @@ services:
     volumes:
       - /home/tiago/Proyectos/dungeonsdragonsapi:/myapi
 
-
 volumes:
   pgdata:
-      
