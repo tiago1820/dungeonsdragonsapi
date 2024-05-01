@@ -34,7 +34,6 @@ export class AuthController {
             data = { token, isAuth: true, message: "Successfully registered." };
             res.status(201).json(data);
         } catch (error) {
-            console.log("ERRORES: ", error);
             data = { error: "Internal server error." };
             return res.status(400).json(data);
         }
@@ -50,12 +49,9 @@ export class AuthController {
                 return res.status(400).json(data);
             }
             const token = this.generateToken(user);
-            console.log("OOOOOOOOOOOOOOOOOOOOOOHI: ");
-
             data = { token, isAuth: true, message: "Login successful." };
             res.status(200).json(data);
         } catch (error) {
-            console.log("ERROR: ", error);
             data["error"] = "Internal Server Error";
             return res.status(500).json(data);
         }
