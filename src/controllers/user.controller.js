@@ -1,7 +1,6 @@
 import { User } from "../db.js";
 
 export class UserController {
-
     findCurrentUser = async (req, res) => {
         let data = {};
         try {
