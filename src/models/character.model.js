@@ -25,6 +25,6 @@ export default (sequelize) => {
         image: {
             type: DataTypes.STRING
         },
-    }, { timestamps: true });
+    }, { timestamps: false });
 }
 
