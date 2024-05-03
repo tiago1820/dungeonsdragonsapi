@@ -38,7 +38,6 @@ export class UserController {
             data = { user: formatedUser };
             return res.status(200).json(data);
         } catch (error) {
-            console.log("Hola", error);
             data["error"] = 'Internal Server Error';
             return res.status(500).json(data);
         }
