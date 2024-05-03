@@ -8,3 +8,4 @@ const character = new CharacterController();
 characterRouter.post("/character/create", auth.authenticate, character.createCharacter);
 characterRouter.get("/character", auth.authenticate, character.getAllCharacters);
 characterRouter.get("/character/:id", auth.authenticate, character.getCharacterById);
+characterRouter.put("/character/:id", auth.authenticate, character.editCharacter);

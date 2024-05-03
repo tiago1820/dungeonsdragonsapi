@@ -60,4 +60,21 @@ export class CharacterController {
         }
     }
 
+    editCharacter = async (req, res) => {
+        let data = {};
+        try {
+            const characterId = req.params.id;
+            const character = await Character.findOne({ where: { id: characterId } });
+            if (!character) {
+                data["error"] = "Character not found."
+                return res.status(404).json(data);
+            }
+            const { dataValues } = await character.update(req.body);
+            data = { character: dataValues };
+            return res.status(200).json(data);
+        } catch (error) {
+            data["error"] = 'Internal Server Error';
+            return res.status(500).json(data);
+        }
+    }
 }
