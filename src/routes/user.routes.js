@@ -7,3 +7,4 @@ const auth = new Authenticate();
 const user = new UserController();
 userRoute.get("/user/profile", auth.authenticate, user.findCurrentUser);
 userRoute.put("/user/:id", auth.authenticate, user.editUser);
+userRoute.delete("/user/:id", auth.authenticate, user.deleteUser);
