@@ -77,4 +77,38 @@ export class CharacterController {
             return res.status(500).json(data);
         }
     }
+
+    deleteCharacter = async (req, res) => {
+        let data = {};
+        try {
+            const characterId = req.params.id;
+            const character = await Character.findByPk(characterId);
+            if (!character) {
+                data["error"] = "Character not found."
+                return res.status(404).json(data);
+            }
+            if (!await character.destroy()) {
+                data["error"] = `"Error deleting the character ${character.name}."`
+                return res.status(404).json(data);
+            }
+            data["message"] = `Character ${character.name} successfully deleted.`
+            return res.status(200).json(data);
+        } catch (error) {
+            data["error"] = 'Internal Server Error';
+            return res.status(500).json(data);
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
