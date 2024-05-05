@@ -3,7 +3,7 @@ import { Character } from "../db.js";
 export class CharacterController {
 
     getAllCharacters = async (req, res) => {
-        let data = { info: {}, results: "" };
+        let data = {};
         try {
             const characters = await Character.findAll({ raw: true });
             data.info = { count: characters.length, pages: "", next: "", prev: "" };
@@ -15,16 +15,15 @@ export class CharacterController {
         }
     }
 
-    getCharacterById = async (req, res) => {
-        let data = {};
+    getCharacterByIds = async (req, res) => {
         try {
-            const userCharacter = req.params.id;
-            const character = await Character.findByPk(userCharacter, { raw: true });
-            data = { character };
+            const query = req.params.ids;
+            const characterIds = query.split(",").map(id => parseInt(id.trim()));
+            const results = await Character.findAll({ where: { id: characterIds } });
+            const data = results.map(item => item.dataValues);
             res.status(200).json(data);
         } catch (error) {
-            data["error"] = "Internal Server Error";
-            return res.status(500).json(data);
+            return res.status(500).json(data.error = "Internal Server Error");
         }
     }
 
@@ -99,16 +98,3 @@ export class CharacterController {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

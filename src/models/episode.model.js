@@ -17,6 +17,6 @@ export default (sequelize) => {
             type: DataTypes.STRING
         },
     }, {
-        timestamps: true
+        timestamps: false
     });
 }
