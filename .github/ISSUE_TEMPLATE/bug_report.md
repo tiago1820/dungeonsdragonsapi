@@ -2,7 +2,7 @@
 name: Informe de Bug
 about: Crea un informe para ayudarnos a mejorar
 title: "[BUG]"
-labels: error
+labels: bug
 assignees: ''
 ---
 
