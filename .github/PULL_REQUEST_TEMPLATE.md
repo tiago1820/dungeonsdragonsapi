@@ -1,6 +1,6 @@
 # Descripción
 
-Descripción del cambio propuesto.
+Descripción del cambio propuesto:
 
 ## Tipo de cambio
 
