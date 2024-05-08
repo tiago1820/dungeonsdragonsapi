@@ -32,4 +32,34 @@ export class LocationController {
             return res.status(500).json(data);
         }
     }
+
+    getLocationByIds = async (req, res) => {
+        let data = {};
+        try {
+            const query = req.params.ids;
+            const locationIds = query.split(",").map(id => parseInt(id.trim()));
+            const results = await Location.findAll({ where: { id: locationIds } });
+            const data = results.map(item => item.dataValues);
+            res.status(200).json(data);
+        } catch (error) {
+            return res.status(500).json(data.error = "Internal Server Error");
+        }
+    }
+
+    editLocation = async (req, res) => {
+        let data = {};
+        try {
+            const locationId = req.params.id;
+            const location = await Location.findOne({ where: { id: locationId } });
+            if (!location) {
+                data["error"] = "Location not found.";
+                return res.status(404).json(data);
+            }
+            const { dataValues } = await location.update(req.body);
+            data = { location: dataValues };
+            return res.status(200).json(data);
+        } catch (error) {
+            return res.status(500).json(data.error = "Internal Server Error");
+        }
+    }
 }
