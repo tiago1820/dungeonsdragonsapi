@@ -9,3 +9,4 @@ locationRouter.post("/location/create", auth.authenticate, location.createLocati
 locationRouter.get("/location", auth.authenticate, location.getAllLocation);
 locationRouter.get("/location/:ids", auth.authenticate, location.getLocationByIds);
 locationRouter.put("/location/:id", auth.authenticate, location.editLocation);
+locationRouter.delete("/location/:id", auth.authenticate, location.deleteLocation);
