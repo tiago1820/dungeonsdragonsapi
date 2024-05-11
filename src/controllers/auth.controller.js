@@ -9,7 +9,7 @@ export class AuthController {
     }
 
     generateToken = (user) => {
-        return jwt.sign({ user: user }, JWT_SECRET_KEY);
+        return jwt.sign({ user: user }, JWT_SECRET_KEY, { expiresIn: "1h" });
     }
 
     authenticateUser = async (email, password) => {
