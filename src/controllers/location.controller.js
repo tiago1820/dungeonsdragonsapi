@@ -62,4 +62,25 @@ export class LocationController {
             return res.status(500).json(data.error = "Internal Server Error");
         }
     }
+
+    deleteLocation = async (req, res) => {
+        let data = {};
+        try {
+            const locationId = req.params.id;
+            const location = await Location.findByPk(locationId);
+            if (!location) {
+                data["error"] = "Location not found."
+                return res.status(404).json(data);
+            }
+            if (!await location.destroy()) {
+                data["error"] = `"Error deleting the location ${location.name}."`
+                return res.status(404).json(data);
+            }
+            data["message"] = `Location ${location.name} successfully deleted.`
+            return res.status(200).json(data);
+        } catch (error) {
+            data["error"] = 'Internal Server Error';
+            return res.status(500).json(data);
+        }
+    }
 }
