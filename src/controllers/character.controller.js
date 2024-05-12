@@ -1,5 +1,5 @@
 import { Character } from "../db.js";
-import { CharacterHandler } from "../handlers/character.handle.js";
+import { CharacterHandler } from "../handlers/character.handler.js";
 
 export class CharacterController {
     constructor() {
@@ -31,7 +31,6 @@ export class CharacterController {
     }
 
     createCharacter = async (req, res) => {
-        let data = {};
         try {
             const {
                 name,
@@ -41,42 +40,30 @@ export class CharacterController {
                 gender,
                 image
             } = req.body;
-            let existCharacter = await Character.findOne({ where: { name } });
+            const existCharacter = await this.handler.findCharacterByName(name);
             if (existCharacter) {
-                data = { error: `There is already a character with the name ${name}` };
-                return res.status(400).json(data);
+                return res.status(400).json({ error: `There is already a character with the name ${name}` });
             }
-            const user = await Character.create({
-                name,
-                status,
-                occupation,
-                powersOrSkills,
-                gender,
-                image
-            });
-            data = { user, message: "Successfully registered." };
-            res.status(201).json(data);
+            const newCharacter = { name, status, occupation, powersOrSkills, gender, image }
+            const character = await this.handler.createNewCharacter(newCharacter);
+            res.status(201).json({ character, message: "Successfully registered." });
         } catch (error) {
-            data = { error: "Internal server error." };
-            return res.status(500).json(data);
+            return res.status(500).json({ error: "Internal server error." });
         }
     }
 
     editCharacter = async (req, res) => {
-        let data = {};
         try {
             const characterId = req.params.id;
-            const character = await Character.findOne({ where: { id: characterId } });
-            if (!character) {
-                data["error"] = "Character not found."
-                return res.status(404).json(data);
+            const newData = req.body;
+            const existCharacter = await this.handler.findCharacterById(characterId);
+            if (!existCharacter) {
+                return res.status(404).json({ error: "Character not found." });
             }
-            const { dataValues } = await character.update(req.body);
-            data = { character: dataValues };
-            return res.status(200).json(data);
+            const characterUpdated = await this.handler.updateCharacter(characterId, newData);
+            return res.status(200).json({ characterUpdated });
         } catch (error) {
-            data["error"] = 'Internal Server Error';
-            return res.status(500).json(data);
+            return res.status(500).json({ error: "Internal server error." });
         }
     }
 
