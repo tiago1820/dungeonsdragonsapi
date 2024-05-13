@@ -58,4 +58,18 @@ export class CharacterHandler {
             throw new Error("Error updating character: " + error.message);
         }
     }
+
+    deleteCharacterById = async (characterId) => {
+        try {
+            const character = await Character.findOne({ where: { id: characterId } });
+            if (!character) {
+                return null;
+            }
+            await character.destroy();
+            return character;
+        } catch (error) {
+            throw new Error("Error deleting character: " + error.message);
+        }
+    }
+
 }

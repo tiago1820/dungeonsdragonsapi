@@ -68,23 +68,19 @@ export class CharacterController {
     }
 
     deleteCharacter = async (req, res) => {
-        let data = {};
         try {
             const characterId = req.params.id;
-            const character = await Character.findByPk(characterId);
+            const character = await this.handler.findCharacterById(characterId);
             if (!character) {
-                data["error"] = "Character not found."
-                return res.status(404).json(data);
+                return res.status(404).json({ error: "Character not found." });
             }
-            if (!await character.destroy()) {
-                data["error"] = `"Error deleting the character ${character.name}."`
-                return res.status(404).json(data);
+            const deletedCharacter = await this.handler.deleteCharacterById(characterId);
+            if(!deletedCharacter) {
+                return res.status(404).json({ error: `Error deleting the character ${character.name}.` });
             }
-            data["message"] = `Character ${character.name} successfully deleted.`
-            return res.status(200).json(data);
+            return res.status(200).json({ message: `Character ${character.name} successfully deleted.` });
         } catch (error) {
-            data["error"] = 'Internal Server Error';
-            return res.status(500).json(data);
+            return res.status(500).json({ error: "Internal server error." });
         }
     }
 }

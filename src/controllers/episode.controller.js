@@ -1,22 +1,23 @@
-import { Episode } from "../db.js";
+import { EpisodeHandler } from "../handlers/episode.handler.js";
 
 export class EpisodeController {
+    constructor() {
+        this.handler = new EpisodeHandler();
+    }
 
     createEpisode = async (req, res) => {
-        let data = {};
         try {
             const { name, airDate, episode } = req.body;
-            let existEpisode = await Episode.findOne({ where: { name } })
+            const existEpisode = await this.handler.findEpisodeByName(name);
             if (existEpisode) {
-                data.error = `There is already a episode with the name ${name}`;
-                return res.status(400).json(data);
+                return res.status(400).json({ error: `There is already a episode with the name ${name}` });
             }
-            const { dataValues: newEpisode } = await Episode.create({
-                name, airDate, episode
-            });
-            res.status(201).json(data.episode = newEpisode);
+            const newEpisode = { name, airDate, episode }
+            const createdEpisode = await this.handler.createNewEpisode(newEpisode);
+            res.status(201).json({ episode: createdEpisode, message: "Successfully registered." });
         } catch (error) {
-            return res.status(500).json(data.error = "Internal Server Error");
+            console.log("AQUI: ", error);
+            return res.status(500).json({ error: "Internal server error." });
         }
     }
 
